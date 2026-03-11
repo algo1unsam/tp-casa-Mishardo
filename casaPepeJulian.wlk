@@ -20,8 +20,11 @@ object casa {
 }
 
 object cuentaCorriente {
-    var saldo = 0
+    var saldo = 500
     
+    method saldo() {
+        return saldo
+    }
 
     method depositar(cantidad) {
         saldo += cantidad
@@ -34,7 +37,11 @@ object cuentaCorriente {
 
 object cuentaConGastos {
     var saldo = 0
-    const costoOperacion = 20
+    const costoOperacion = 50
+
+    method saldo() {
+        return saldo
+    }
 
     method depositar(cantidad) {
         saldo += cantidad - costoOperacion
@@ -42,6 +49,28 @@ object cuentaConGastos {
 
     method extraer(cantidad) {
         saldo -= cantidad
+    }
+}
+
+object cuentaCombinada {
+    var primaria = cuentaConGastos
+    var secundaria = cuentaCorriente
+
+    method saldo() {
+        return primaria.saldo() + secundaria.saldo()
+    }
+
+    method depositar(cantidad){
+        primaria.depositar(cantidad)
+    }
+
+    method extraer(cantidad) {
+        if (primaria.saldo() >= cantidad) {
+            return primaria.extraer(cantidad)
+        }
+        else { 
+            secundaria.extraer(cantidad)
+        }
     }
 }
 
